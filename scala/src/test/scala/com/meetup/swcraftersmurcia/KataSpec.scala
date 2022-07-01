@@ -35,16 +35,18 @@ class KataSpec extends FunSuite {
     assertEquals(result, expected)
   }
 
-  test("DNI should end with a letter") {
-    val input = "123456789"
+  List(
+    'U', 'I', 'O', 'Ñ', '9'
+  ).foreach { lastLetter =>
+    test("DNI should return an error when the last character is not a valid letter") {
+      val input = s"12345678${lastLetter}"
 
-    val expected = Left(NotValidDni(Messages.prefixEndsWithLetter))
+      val expected = Left(NotValidDni(Messages.prefixEndsWithLetter))
 
-    val result = DocumentValidator.validate(input)
+      val result = DocumentValidator.validate(input)
 
-    assertEquals(result, expected)
+      assertEquals(result, expected)
+    }
   }
-
-
 
 }
