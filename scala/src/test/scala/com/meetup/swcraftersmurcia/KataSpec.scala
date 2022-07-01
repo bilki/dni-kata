@@ -1,15 +1,11 @@
 package com.meetup.swcraftersmurcia
 
-import com.meetup.swcraftersmurcia.DocumentValidator.{
-  Dni,
-  Messages,
-  NotValidDni
-}
+import com.meetup.swcraftersmurcia.DocumentValidator.{Dni, Messages, NotValidDni, NotValidNie}
 import munit.FunSuite
 
 class KataSpec extends FunSuite {
 
-  test("DNI or NIE size should return an error if input size is not 9") {
+  test("DNI size should return an error if input size is not 9") {
     val input = "123456789X"
 
     val expected = Left(NotValidDni(Messages.sizeNotValidMsg))
@@ -19,7 +15,7 @@ class KataSpec extends FunSuite {
     assertEquals(result, expected)
   }
 
-  test("DNI or NIE should be of size 9") {
+  test("DNI should be of size 9") {
     val input = "54956042A"
 
     val expected = Right(Dni(input))
@@ -47,7 +43,7 @@ class KataSpec extends FunSuite {
     ) {
       val input = s"12345678${lastLetter}"
 
-      val expected = Left(NotValidDni(Messages.prefixEndsWithLetter))
+      val expected = Left(NotValidDni(Messages.endsWithInvalidChar))
 
       val result = DocumentValidator.validate(input)
 
@@ -96,6 +92,18 @@ class KataSpec extends FunSuite {
 
       assertEquals(result, expected)
     }
+  }
+
+  test(
+    "NIE should return an error when the first letter is not XYZ"
+  ) {
+    val input = "B5470399S"
+
+    val expected = Left(NotValidNie(Messages.nieFirstLetterNotValid))
+
+    val result = DocumentValidator.validate(input)
+
+    assertEquals(result, expected)
   }
 
 }

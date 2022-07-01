@@ -2,6 +2,12 @@ package com.meetup.swcraftersmurcia
 
 object Remainder {
 
+  val nieDigits = Map(
+    'X' -> '0',
+    'Y' -> '1',
+    'Z' -> '2'
+  )
+
   val letter = Map(
     0L  -> 'T',
     1L  -> 'R',
