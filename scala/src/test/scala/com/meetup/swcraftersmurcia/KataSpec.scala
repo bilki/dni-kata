@@ -67,35 +67,35 @@ class KataSpec extends FunSuite {
     assertEquals(result, expected)
   }
 
-//  List(
-//    "31970165G",
-//    "10448738E",
-//    "68163822X",
-//    "68132163E",
-//    "50791233B",
-//    "90250990W",
-//    "87477013D",
-//    "34272318H",
-//    "54956042A",
-//    "78176129A",
-//    "49390008S",
-//    "90583399S",
-//    "08004624A",
-//    "00062477D",
-//    "94985972C",
-//    "87819112Y",
-//    "92683017D",
-//    "17402629R",
-//    "17206298K",
-//    "24473205D"
-//  ).foreach { validDni =>
-//    test("DNI should be valid when control char is part of the valid values set") {
-//      val expected = Right(Dni(validDni))
-//
-//      val result = DocumentValidator.validate(validDni)
-//
-//      assertEquals(result, expected)
-//    }
-//  }
+  List(
+    "31970165G",
+    "10448738E",
+    "68163822X",
+    "68132163E",
+    "50791233B",
+    "90250990W",
+    "87477013D",
+    "34272318H",
+    "54956042A",
+    "78176129A",
+    "49390008S",
+    "90583399S",
+    "08004624A",
+    "00062477D",
+    "94985972C",
+    "87819112Y",
+    "92683017D",
+    "17402629R",
+    "17206298K",
+    "24473205D"
+  ).foreach { validDni =>
+    test("DNI should be valid when control char is part of the valid values set") {
+      val expected = Right(Dni(validDni))
+
+      val result = DocumentValidator.validate(validDni)
+
+      assertEquals(result, expected)
+    }
+  }
 
 }
