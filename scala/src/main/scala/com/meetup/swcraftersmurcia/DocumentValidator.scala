@@ -7,6 +7,7 @@ object DocumentValidator {
     val sizeNotValidMsg = "size not equal to 9"
     val prefixNotValidMsg = "dni prefix should be all numbers"
     val prefixEndsWithLetter = "dni should end with a letter"
+    val controlSumDigitNotValid = "control digit not valid"
 
   }
 
@@ -24,9 +25,13 @@ object DocumentValidator {
       val prefix = rawInput.take(8)
       if (prefix.forall(_.isDigit)) {
         val lastLetter = rawInput.reverse.head
-        if (Remainder.letter.values.toList.contains(lastLetter))
-          Right(Dni(rawInput))
-        else
+        if (Remainder.letter.values.toList.contains(lastLetter)) {
+          val remainder = prefix.toLong % 23
+          if (Remainder.letter.get(remainder).contains(lastLetter))
+            Right(Dni(rawInput))
+          else
+            Left(NotValidDni(Messages.controlSumDigitNotValid))
+        } else
           Left(NotValidDni(Messages.prefixEndsWithLetter))
       } else
         Left(NotValidDni(Messages.prefixNotValidMsg))
