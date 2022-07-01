@@ -1,3 +1,5 @@
+package com.meetup.swcraftersmurcia
+
 import munit.FunSuite
 
 class KataSpec extends FunSuite {
