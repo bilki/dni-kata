@@ -34,9 +34,10 @@ object Generators {
 
   val notAllDigitsPrefixGen: Gen[String] =
     for {
-      invalidPrefix <- invalidPrefixGen
+      digit         <- Gen.numChar
+      invalidPrefix <- invalidPrefixGen.map(_.tail)
       last          <- validLastCharGen
-    } yield s"${invalidPrefix}${last}"
+    } yield s"${digit}${invalidPrefix}${last}"
 
   val allPossibleCombinationsGen: Gen[List[String]] = {
     val digitControlChars = ControlDigit.remainder.values.toList
