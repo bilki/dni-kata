@@ -14,7 +14,7 @@ class DniSpec extends FunSuite with ScalaCheckSuite {
 
         val result = validateDNI(validDni)
 
-        assertEquals(result, expected.validNec)
+        assertEquals(result, expected.asRight[DniError])
       }
     }
 
@@ -24,7 +24,7 @@ class DniSpec extends FunSuite with ScalaCheckSuite {
 
       val result = validateDNI(notNineLong)
 
-      assertEquals(result, expected.invalidNec[Dni])
+      assertEquals(result, expected.asLeft[Dni])
     }
   }
 
@@ -34,7 +34,7 @@ class DniSpec extends FunSuite with ScalaCheckSuite {
 
       val result = validateDNI(notLastCharLetter)
 
-      assertEquals(result, expected.invalidNec[Dni])
+      assertEquals(result, expected.asLeft[Dni])
     }
   }
 
@@ -45,7 +45,7 @@ class DniSpec extends FunSuite with ScalaCheckSuite {
 
         val result = validateDNI(notLastCharValidLetter)
 
-        assertEquals(result, expected.invalidNec[Dni])
+        assertEquals(result, expected.asLeft[Dni])
     }
   }
 
@@ -55,7 +55,7 @@ class DniSpec extends FunSuite with ScalaCheckSuite {
 
       val result = validateDNI(notAllDigitsPrefix)
 
-      assertEquals(result, expected.invalidNec[Dni])
+      assertEquals(result, expected.asLeft[Dni])
     }
   }
 
@@ -63,7 +63,7 @@ class DniSpec extends FunSuite with ScalaCheckSuite {
     forAllNoShrink(Generators.allPossibleCombinationsGen) {
       allPossibleCombinations =>
         val validCombinations =
-          allPossibleCombinations.count(validateDNI(_).isValid)
+          allPossibleCombinations.count(validateDNI(_).isRight)
 
         assertEquals(validCombinations, 1)
     }
@@ -77,7 +77,7 @@ class DniSpec extends FunSuite with ScalaCheckSuite {
 
       val result = validateDNI(invalidNieFirst)
 
-      assertEquals(result, expected.invalidNec)
+      assertEquals(result, expected.asLeft[Dni])
     }
   }
 
