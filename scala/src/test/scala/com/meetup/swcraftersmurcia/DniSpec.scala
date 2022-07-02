@@ -7,15 +7,16 @@ import org.scalacheck.Prop.{forAll, forAllNoShrink}
 
 class DniSpec extends FunSuite with ScalaCheckSuite {
 
-  test("A valid raw input should be validated as a correct DNI") {
-    val input = Fixtures.validDniInputs.head
+  Fixtures.validDniInputs
+    .foreach { validDni =>
+      test(s"Sample DNI ${validDni} should be validated as correct input") {
+        val expected = Dni(validDni)
 
-    val expected = Dni(input)
+        val result = validateDNI(validDni)
 
-    val result = validateDNI(input)
-
-    assertEquals(result, expected.validNec[DniError])
-  }
+        assertEquals(result, expected.validNec)
+      }
+    }
 
   test("Raw input other than nine characters long should be rejected") {
     forAll(Generators.notNineCharsGen) { notNineLong =>
@@ -61,7 +62,8 @@ class DniSpec extends FunSuite with ScalaCheckSuite {
   test("Only a single digit control should be valid at the same time") {
     forAllNoShrink(Generators.allPossibleCombinationsGen) {
       allPossibleCombinations =>
-        val validCombinations = allPossibleCombinations.count(validateDNI(_).isValid)
+        val validCombinations =
+          allPossibleCombinations.count(validateDNI(_).isValid)
 
         assertEquals(validCombinations, 1)
     }
