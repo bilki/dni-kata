@@ -1,6 +1,7 @@
 package com.meetup.swcraftersmurcia
 
 import cats.data.ValidatedNec
+import cats.syntax.all._
 
 object DniValidator {
 
@@ -8,6 +9,7 @@ object DniValidator {
 
   case class Error()
 
-  def validateDNI(rawInput: String): ValidatedNec[Error, Dni] = ???
+  def validateDNI(rawInput: String): ValidatedNec[Error, Dni] =
+    Dni(rawInput).validNec[Error]
 
 }
