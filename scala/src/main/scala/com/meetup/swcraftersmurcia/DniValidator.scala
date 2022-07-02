@@ -19,9 +19,8 @@ object DniValidator {
 
   private def digitControlFor(prefix: String): Option[Char] = for {
     prefixNumber <- prefix.toLongOption
-    control <- ControlDigit.remainder.get(
-      prefixNumber % Constants.DNI_DIGIT_CONTROL_REMAINDER
-    )
+    remainderIdx = prefixNumber % Constants.DNI_DIGIT_CONTROL_REMAINDER
+    control <- ControlDigit.remainder.get(remainderIdx)
   } yield control
 
   val nineCharsLongRule: String => Boolean   = _.length == Constants.DNI_LENGTH

@@ -18,6 +18,17 @@ class DniSpec extends FunSuite with ScalaCheckSuite {
       }
     }
 
+  Fixtures.validNieInputs
+    .foreach { validNie =>
+      test(s"Sample ${validNie} should be validated as correct NIE") {
+        val expected = Dni(validNie)
+
+        val result = validateDNI(validNie)
+
+        assertEquals(result, expected.asRight[DniError])
+      }
+    }
+
   test("Raw input other than nine characters long should be rejected") {
     forAll(Generators.notNineCharsGen) { notNineLong =>
       val expected = DniError.NotNineLong
