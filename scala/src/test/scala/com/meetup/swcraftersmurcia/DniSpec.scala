@@ -9,7 +9,7 @@ class DniSpec extends FunSuite with ScalaCheckSuite {
 
   Fixtures.validDniInputs
     .foreach { validDni =>
-      test(s"Sample DNI ${validDni} should be validated as correct input") {
+      test(s"Sample ${validDni} should be validated as correct DNI") {
         val expected = Dni(validDni)
 
         val result = validateDNI(validDni)
@@ -66,6 +66,18 @@ class DniSpec extends FunSuite with ScalaCheckSuite {
           allPossibleCombinations.count(validateDNI(_).isValid)
 
         assertEquals(validCombinations, 1)
+    }
+  }
+
+  test(
+    "Raw input with exactly one invalid letter at the beginning must be rejected"
+  ) {
+    forAllNoShrink(Generators.invalidNieStartGen) { invalidNieFirst =>
+      val expected = DniError.NotFirstNieLetter
+
+      val result = validateDNI(invalidNieFirst)
+
+      assertEquals(result, expected.invalidNec)
     }
   }
 

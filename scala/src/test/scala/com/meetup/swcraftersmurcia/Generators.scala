@@ -44,4 +44,14 @@ object Generators {
       digitControlChars.map(digitControl => s"${prefix}${digitControl}")
     )
   }
+
+  val invalidFirstNieLetterGen: Gen[Char] =
+    Gen.alphaChar.filterNot(NieSpecific.replaceDigit.keys.toList.contains)
+
+  val invalidNieStartGen: Gen[String] =
+    for {
+      start  <- invalidFirstNieLetterGen
+      prefix <- validPrefixGen.map(_.tail)
+      last   <- validLastCharGen
+    } yield s"${start}${prefix}${last}"
 }

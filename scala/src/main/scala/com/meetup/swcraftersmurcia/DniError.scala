@@ -19,4 +19,6 @@ object DniError {
   case object NotMatchingDigitControl extends DniError
   type NotMatchingDigitControl = NotMatchingDigitControl.type
 
+  case object NotFirstNieLetter extends DniError
+  type NotFirstNieLetter = NotFirstNieLetter.type
 }
