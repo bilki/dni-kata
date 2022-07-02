@@ -10,4 +10,7 @@ object DniError {
   case object NotLastLetter extends DniError
   type NotLastLetter = NotLastLetter.type
 
+  case object NotLastValidLetter extends DniError
+  type NotLastValidLetter = NotLastValidLetter.type
+
 }

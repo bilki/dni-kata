@@ -37,4 +37,14 @@ class DniSpec extends FunSuite with ScalaCheckSuite {
     }
   }
 
+  test("Raw input must end with a valid letter") {
+    forAllNoShrink(Generators.notLastCharWithForbiddenGen) { notLastCharValidLetter =>
+      val expected = DniError.NotLastValidLetter
+
+      val result = validateDNI(notLastCharValidLetter)
+
+      assertEquals(result, expected.invalidNec[Dni])
+    }
+  }
+
 }

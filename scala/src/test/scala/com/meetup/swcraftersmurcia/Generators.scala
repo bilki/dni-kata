@@ -14,4 +14,13 @@ object Generators {
       last   <- Gen.numChar
     } yield s"${prefix}${last}"
 
+  val invalidLastCharGen: Gen[Char] = Gen.oneOf(Constants.INVALID_LAST_LETTERS)
+
+  val validLastCharGen: Gen[Char] = Gen.alphaChar.filterNot(Constants.INVALID_LAST_LETTERS.contains)
+
+  val notLastCharWithForbiddenGen: Gen[String] =
+    for {
+      prefix <- validPrefixGen
+      last   <- invalidLastCharGen
+    } yield s"${prefix}${last}"
 }
