@@ -58,4 +58,13 @@ class DniSpec extends FunSuite with ScalaCheckSuite {
     }
   }
 
+  test("Only a single digit control should be valid at the same time") {
+    forAllNoShrink(Generators.allPossibleCombinationsGen) {
+      allPossibleCombinations =>
+        val validCombinations = allPossibleCombinations.count(validateDNI(_).isValid)
+
+        assertEquals(validCombinations, 1)
+    }
+  }
+
 }

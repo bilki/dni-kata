@@ -37,4 +37,11 @@ object Generators {
       invalidPrefix <- invalidPrefixGen
       last          <- validLastCharGen
     } yield s"${invalidPrefix}${last}"
+
+  val allPossibleCombinationsGen: Gen[List[String]] = {
+    val digitControlChars = ControlDigit.remainder.values.toList
+    validPrefixGen.map(prefix =>
+      digitControlChars.map(digitControl => s"${prefix}${digitControl}")
+    )
+  }
 }
