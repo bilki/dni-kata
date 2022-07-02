@@ -28,7 +28,7 @@ class DniSpec extends FunSuite with ScalaCheckSuite {
     }
   }
 
-  test("Raw input must end with a letter") {
+  test("Raw input must not end with a digit") {
     forAllNoShrink(Generators.notLastCharWithNumGen) { notLastCharLetter =>
       val expected = DniError.NotLastLetter
 
@@ -38,7 +38,7 @@ class DniSpec extends FunSuite with ScalaCheckSuite {
     }
   }
 
-  test("Raw input must end with a valid letter") {
+  test("Raw input must not end with a forbidden letter") {
     forAllNoShrink(Generators.notLastCharWithForbiddenGen) {
       notLastCharValidLetter =>
         val expected = DniError.NotLastValidLetter
@@ -49,7 +49,7 @@ class DniSpec extends FunSuite with ScalaCheckSuite {
     }
   }
 
-  test("Raw input first 8 characters must be digits") {
+  test("Raw input prefix (exactly 8 characters) must be digits") {
     forAllNoShrink(Generators.notAllDigitsPrefixGen) { notAllDigitsPrefix =>
       val expected = DniError.NotValidPrefix
 
