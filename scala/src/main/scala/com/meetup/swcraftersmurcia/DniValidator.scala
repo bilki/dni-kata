@@ -9,9 +9,10 @@ object DniValidator {
 
   private def validateDocument[E <: DniError](
       mustBe: String => Boolean,
-      error: E,
+      error: E
+  )(
       input: String
-  ): Either[E, String] =
+  ): Either[DniError, String] =
     Either.cond(mustBe(input), input, error)
 
   private def prefixOf(input: String): String =
@@ -44,21 +45,15 @@ object DniValidator {
         )
   }
 
-  def validateDNI(rawInput: String): Either[DniError, Dni] =
-    for {
-      _           <- validateDocument(nineCharsLongRule, NotNineLong, rawInput)
-      replacedNIE <- validateNIE(rawInput)
-      _ <- validateDocument(prefixAllDigitsRule, NotValidPrefix, replacedNIE)
-      _ <- validateDocument(lastCharNotNumRule, NotLastLetter, replacedNIE)
-      _ <- validateDocument(
-        lastCharValidLetterRule,
-        NotLastValidLetter,
-        replacedNIE
-      )
-      _ <- validateDocument(
-        digitControlMatchingRule,
-        NotMatchingDigitControl,
-        replacedNIE
-      )
-    } yield Dni(rawInput)
+  def validateDNI(rawInput: String): Either[DniError, Dni] = {
+    val validations =
+      validateDocument(nineCharsLongRule, NotNineLong)(rawInput) >>=
+        validateNIE >>=
+        validateDocument(prefixAllDigitsRule, NotValidPrefix) >>=
+        validateDocument(lastCharNotNumRule, NotLastLetter) >>=
+        validateDocument(lastCharValidLetterRule, NotLastValidLetter) >>=
+        validateDocument(digitControlMatchingRule, NotMatchingDigitControl)
+
+    validations.as(Dni(rawInput))
+  }
 }
