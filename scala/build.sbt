@@ -9,6 +9,8 @@ lazy val root = (project in file("."))
   .settings(
     name := "dni-kata",
     libraryDependencies ++= Seq(
-      munit, munitScalacheck
+      cats,
+      munit,
+      munitScalacheck
     )
   )
