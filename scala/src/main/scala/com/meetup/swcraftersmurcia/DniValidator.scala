@@ -7,9 +7,7 @@ object DniValidator {
 
   case class Dni(value: String)
 
-  case class Error()
-
-  def validateDNI(rawInput: String): ValidatedNec[Error, Dni] =
-    Dni(rawInput).validNec[Error]
+  def validateDNI(rawInput: String): ValidatedNec[DniError, Dni] =
+    Dni(rawInput).validNec[DniError]
 
 }
