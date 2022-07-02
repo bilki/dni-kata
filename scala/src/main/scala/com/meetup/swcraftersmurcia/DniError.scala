@@ -13,4 +13,7 @@ object DniError {
   case object NotLastValidLetter extends DniError
   type NotLastValidLetter = NotLastValidLetter.type
 
+  case object NotValidPrefix extends DniError
+  type NotValidPrefix = NotValidPrefix.type
+
 }

@@ -47,4 +47,14 @@ class DniSpec extends FunSuite with ScalaCheckSuite {
     }
   }
 
+  test("Raw input first 8 characters must be digits") {
+    forAllNoShrink(Generators.notAllDigitsPrefixGen) { notAllDigitsPrefix =>
+      val expected = DniError.NotValidPrefix
+
+      val result = validateDNI(notAllDigitsPrefix)
+
+      assertEquals(result, expected.invalidNec[Dni])
+    }
+  }
+
 }

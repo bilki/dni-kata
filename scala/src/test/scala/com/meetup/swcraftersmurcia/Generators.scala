@@ -23,4 +23,12 @@ object Generators {
       prefix <- validPrefixGen
       last   <- invalidLastCharGen
     } yield s"${prefix}${last}"
+
+  val invalidPrefixGen: Gen[String] = Gen.listOfN(Constants.DNI_PREFIX_LENGTH, Gen.alphaNumChar).filterNot(_.exists(_.isDigit)).map(_.mkString)
+
+  val notAllDigitsPrefixGen: Gen[String] =
+    for {
+      invalidPrefix <- invalidPrefixGen
+      last <- validLastCharGen
+    } yield s"${invalidPrefix}${last}"
 }
