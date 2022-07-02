@@ -3,7 +3,7 @@ package com.meetup.swcraftersmurcia
 import cats.syntax.all._
 import com.meetup.swcraftersmurcia.DniValidator._
 import munit.{FunSuite, ScalaCheckSuite}
-import org.scalacheck.Prop.forAll
+import org.scalacheck.Prop.{forAll, forAllNoShrink}
 
 class DniSpec extends FunSuite with ScalaCheckSuite {
 
@@ -22,6 +22,16 @@ class DniSpec extends FunSuite with ScalaCheckSuite {
       val expected = DniError.NotNineLong
 
       val result = validateDNI(notNineLong)
+
+      assertEquals(result, expected.invalidNec[Dni])
+    }
+  }
+
+  test("Raw input must end with a letter") {
+    forAllNoShrink(Generators.notLastCharWithNumGen) { notLastCharLetter =>
+      val expected = DniError.NotLastLetter
+
+      val result = validateDNI(notLastCharLetter)
 
       assertEquals(result, expected.invalidNec[Dni])
     }
