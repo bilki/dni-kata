@@ -2,25 +2,34 @@ package com.meetup.swcraftersmurcia
 
 import cats.data.{Validated, ValidatedNec}
 import cats.syntax.all._
-import com.meetup.swcraftersmurcia.DniError.{NotLastLetter, NotLastValidLetter, NotNineLong}
+import com.meetup.swcraftersmurcia.DniError.{
+  NotLastLetter,
+  NotLastValidLetter,
+  NotNineLong,
+  NotValidPrefix
+}
 
 object DniValidator {
 
   case class Dni(value: String)
 
-  private def validateNineCharsLong(input: String): ValidatedNec[NotNineLong, String] =
-    Validated.cond(input.length == Constants.DNI_LENGTH, input, NotNineLong).toValidatedNec
+  private def validateDocument[E <: DniError](
+      mustBe: String => Boolean,
+      error: E
+  )(input: String): ValidatedNec[E, String] =
+    Validated.cond(mustBe(input), input, error).toValidatedNec
 
-  private def validateLastCharNotNum(input: String): ValidatedNec[NotLastLetter, String] =
-    Validated.cond(!input.last.isDigit, input, NotLastLetter).toValidatedNec
-
-  private def validateLastCharValidLetter(input: String): ValidatedNec[NotLastValidLetter, String] =
-    Validated.cond(!Constants.INVALID_LAST_LETTERS.contains(input.last), input, NotLastValidLetter).toValidatedNec
+  val nineCharsLongRule: String => Boolean   = _.length == Constants.DNI_LENGTH
+  val prefixAllDigitsRule: String => Boolean = _.take(Constants.DNI_PREFIX_LENGTH).forall(_.isDigit)
+  val lastCharNotNumRule: String => Boolean  = !_.last.isDigit
+  val lastCharValidLetterRule: String => Boolean = input =>
+    !Constants.INVALID_LAST_LETTERS.contains(input.last)
 
   def validateDNI(rawInput: String): ValidatedNec[DniError, Dni] =
-    validateNineCharsLong(rawInput)
-      .andThen(validateLastCharNotNum)
-      .andThen(validateLastCharValidLetter)
+    validateDocument(nineCharsLongRule, NotNineLong)(rawInput)
+      .andThen(validateDocument(prefixAllDigitsRule, NotValidPrefix))
+      .andThen(validateDocument(lastCharNotNumRule, NotLastLetter))
+      .andThen(validateDocument(lastCharValidLetterRule, NotLastValidLetter))
       .map(Dni)
 
 }
