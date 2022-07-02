@@ -16,4 +16,7 @@ object DniError {
   case object NotValidPrefix extends DniError
   type NotValidPrefix = NotValidPrefix.type
 
+  case object NotMatchingDigitControl extends DniError
+  type NotMatchingDigitControl = NotMatchingDigitControl.type
+
 }
